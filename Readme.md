@@ -1,11 +1,38 @@
 Subject:
 
-React is a view library that you provide with data, 
+**React** is a **view library** that you provide with data, 
 then it renders the view in an efficient, predictable way. 
-Redux is a state management framework that you can use to simplify 
-the management of your application's state. 
-Typically, in a React Redux app, you create a single Redux store 
-that manages the state of your entire app.
+
+**Redux** is a **state management framework** that you can use to simplify the management of your application's state. 
+
+Typically, in a **React Redux app**, you create a single Redux store that manages the state of your entire app.
+
+Your **React components** subscribe to only the pieces of data in the store that are relevant to their role. 
+
+Then, you dispatch actions directly from **React components**, which then trigger store updates.
+
+Because Redux is not designed to work with React out of the box, you need to use the **react-redux package** 
+
+It provides a way for you to pass Redux state and dispatch to your React components as props
+
+Example Code: Step 1
+```
+  class DisplayMessages extends React.Component {
+    constructor(props){
+      super(props);
+      this.state = {
+        input: '',
+        messages: []
+      }
+    }
+    render() {
+      return <div />
+    }
+  };
+```
+
+Step 2
+
 
         <<React
 class DisplayMessages extends React.Component {
