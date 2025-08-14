@@ -31,67 +31,72 @@ Example Code: Step 1
   };
 ```
 
-Step 2
 
-
-        <<React
-class DisplayMessages extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      input: '',
-      messages: []
+Example Code: Step 2
+```
+  class DisplayMessages extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        input: '',
+        messages: []
+      }
+      this.handleChange = this.handleChange.bind(this);
+      this.submitMessage = this.submitMessage.bind(this);
     }
-    this.handleChange = this.handleChange.bind(this);
-    this.submitMessage = this.submitMessage.bind(this);
-  }
-  // Add handleChange() and submitMessage() methods here
-  handleChange(e){
-    this.setState({
-      input: e.target.value
-    })
-  }
-  submitMessage(){
-    let inputVar = this.state.input;
-    let arr = [...this.state.messages, inputVar];
-    this.setState({
-      input: "",
-      messages: arr
-    })
-    return
-  }
-  render() {
-    let items = this.state.messages.map(item => <li>{item}</li>);
-    return (
-      <div>
-        <h2>Type in a new Message:</h2>
-        <input onChange={this.handleChange} value={this.state.input}></input>
-        <button onClick={this.submitMessage}>Click Me</button>
-        <ul>
-          <li>{items}</li>
-        </ul>
-      </div>
-    );
-  }
-};
-
-        <<Redux
-const ADD = "ADD";
-const addMessage = (message) => {
-  return {
-    type: ADD,
-    message
-  }
-}
-const messageReducer = (state = [], action) => {
-  switch(action.type) {
-      case ADD:
-        return [...state, action.message]
-      default:
-        return state;
+    handleChange(e){
+      this.setState({
+        input: e.target.value
+      })
     }
-}
-const store = Redux.createStore(messageReducer)
+    submitMessage(){
+      let inputVar = this.state.input;
+      let arr = [...this.state.messages, inputVar];
+      this.setState({
+        input: "",
+        messages: arr
+      })
+      return
+    }
+    render() {
+      let items = this.state.messages.map(item => <li>{item}</li>);
+      return (
+        <div>
+          <h2>Type in a new Message:</h2>
+          <input onChange={this.handleChange} value={this.state.input}></input>
+          <button onClick={this.submitMessage}>Click Me</button>
+          <ul>
+            <li>{items}</li>
+          </ul>
+        </div>
+      );
+    }
+  };
+```
+
+
+Example Code: Step 3
+```
+  const ADD = "ADD";
+  const addMessage = (message) => {
+    return {
+      type: ADD,
+      message
+    }
+  }
+  const messageReducer = (state = [], action) => {
+    switch(action.type) {
+        case ADD:
+          return [...state, action.message]
+        default:
+          return state;
+      }
+  }
+  const store = Redux.createStore(messageReducer)
+```
+
+Step 4
+
 
         <<Provider
 // Redux:
