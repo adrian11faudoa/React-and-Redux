@@ -95,105 +95,168 @@ Example Code: Step 3
   const store = Redux.createStore(messageReducer)
 ```
 
-Step 4
 
+**React Redux** provides a small API with two key features: **Provider** and **connect**.
 
-        <<Provider
-// Redux:
-const ADD = 'ADD';
-const addMessage = (message) => {
-  return {
-    type: ADD,
-    message
-  }
-};
-const messageReducer = (state = [], action) => {
-  switch (action.type) {
-    case ADD:
-      return [
-        ...state,
-        action.message
-      ];
-    default:
-      return state;
-  }
-};
-const store = Redux.createStore(messageReducer);
+The **Provider** is a wrapper component from React Redux that wraps your **React app**. 
 
-// React:
-class DisplayMessages extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      input: '',
-      messages: []
+This wrapper then allows you to access the Redux store and dispatch functions throughout your component tree.
+
+**Provider** takes two props, the Redux store and the child components of your app. 
+
+Example Code: Defining the Provider for an App
+```
+  <Provider store={store}>
+    <App/>
+  </Provider>
+```
+
+Example Code: Step 4
+```
+  // Redux:
+  const ADD = 'ADD';
+  const addMessage = (message) => {
+    return {
+      type: ADD,
+      message
     }
-    this.handleChange = this.handleChange.bind(this);
-    this.submitMessage = this.submitMessage.bind(this);
-  }
-  handleChange(event) {
-    this.setState({
-      input: event.target.value
-    });
-  }
-  submitMessage() {  
-    this.setState((state) => {
-      const currentMessage = state.input;
-      return {
+  };
+  const messageReducer = (state = [], action) => {
+    switch (action.type) {
+      case ADD:
+        return [
+          ...state,
+          action.message
+        ];
+      default:
+        return state;
+    }
+  };
+  const store = Redux.createStore(messageReducer);
+
+  // React:
+  class DisplayMessages extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
         input: '',
-        messages: state.messages.concat(currentMessage)
-      };
-    });
-  }
-  render() {
-    return (
-      <div>
-        <h2>Type in a new Message:</h2>
-        <input
-          value={this.state.input}
-          onChange={this.handleChange}/><br/>
-        <button onClick={this.submitMessage}>Submit</button>
-        <ul>
-          {this.state.messages.map( (message, idx) => {
-              return (
-                 <li key={idx}>{message}</li>
-              )
-            })
-          }
-        </ul>
-      </div>
-    );
-  }
-};
-const Provider = ReactRedux.Provider;
-class AppWrapper extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    return (
-      <Provider store={store}>
-        <DisplayMessages/>
-      </Provider>
-    );
-  }
-};
+        messages: []
+      }
+      this.handleChange = this.handleChange.bind(this);
+      this.submitMessage = this.submitMessage.bind(this);
+    }
+    handleChange(event) {
+      this.setState({
+        input: event.target.value
+      });
+    }
+    submitMessage() {  
+      this.setState((state) => {
+        const currentMessage = state.input;
+        return {
+          input: '',
+          messages: state.messages.concat(currentMessage)
+        };
+      });
+    }
+    render() {
+      return (
+        <div>
+          <h2>Type in a new Message:</h2>
+          <input
+            value={this.state.input}
+            onChange={this.handleChange}/><br/>
+          <button onClick={this.submitMessage}>Submit</button>
+          <ul>
+            {this.state.messages.map( (message, idx) => {
+                return (
+                  <li key={idx}>{message}</li>
+                )
+              })
+            }
+          </ul>
+        </div>
+      );
+    }
+  };
+  const Provider = ReactRedux.Provider;
+  class AppWrapper extends React.Component {
+    render() {
+      return (
+        <Provider store={store}>
+          <DisplayMessages/>
+        </Provider>
+      );
+    }
+  };
+```
+**Note**: React Redux is available as a **global variable** here, so you can access the Provider with dot notation. 
+The code in the editor takes advantage of this and sets it to a **constant Provider** for you to use in the **AppWrapper render method**.
 
 
-        <<Dispatch to Props
-const addMessage = (message) => {
-  return {
-    type: 'ADD',
-    message: message
-  }
-};
-const mapDispatchToProps = (dispatch) => {
-  return {
-    submitNewMessage: function(message) {
-      dispatch(addMessage(message))
+The Provider component allows you to provide **state** and **dispatch** to your React components, but you must specify exactly what state and actions you want. 
+
+This way, you make sure that each component only has access to the state it needs. 
+
+You accomplish this by creating two functions: **mapStateToProps()** and **mapDispatchToProps()**
+
+In these functions, you declare **what pieces of state you want** to have access to and **which action creators you need** to be able to dispatch. 
+
+**Note**: Behind the scenes, React Redux uses the **store.subscribe()** method to implement **mapStateToProps()**
+
+Example Code: Step 5
+```
+  const state = [];
+  const mapStateToProps = (state) => {
+    return {
+      messages: state
     }
   }
-}
+```
+
+
+The **mapDispatchToProps()** function is used to provide specific **action creators** to your **React components** so they can dispatch actions against the Redux store. 
+
+It returns an object that **maps dispatch actions to property names**, which become component props. 
+
+However, instead of returning a piece of state, each property returns a function that calls dispatch with an action creator and any relevant action data. 
+
+You have access to this dispatch because it's passed in to **mapDispatchToProps()** as a parameter when you define the function
+
+Behind the scenes, React Redux is using Redux's **store.dispatch()** to conduct these **dispatches** with **mapDispatchToProps()**
+
+For example, you have a **loginUser() action creator** that takes a username as an action payload. 
+
+Example Code:
+```
+  {
+    submitLoginUser: function(username) {
+      dispatch(loginUser(username));
+    }
+  }
+```
+
+Example Code: Step 6
+```
+  const addMessage = (message) => {
+    return {
+      type: 'ADD',
+      message: message
+    }
+  };
+  const mapDispatchToProps = (dispatch) => {
+    return {
+      submitNewMessage: function(message) {
+        dispatch(addMessage(message))
+      }
+    }
+  }
+```
+
+Step 7
+
+
+
 
 
         <<Connect Redux to React
