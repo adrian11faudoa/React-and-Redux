@@ -259,6 +259,9 @@ Step 7
 
 
 
+
+
+
         <<Connect Redux to React
 const addMessage = (message) => {
   return {
